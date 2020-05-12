@@ -1,0 +1,1 @@
+"..\..\User\C\HC89F30x_PORT_MAP.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\HC89F30x_PORT_MAP.lst) TABS (2) OBJECT(.\Output\HC89F30x_PORT_MAP.obj)

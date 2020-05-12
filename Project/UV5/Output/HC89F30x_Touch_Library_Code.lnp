@@ -1,0 +1,19 @@
+".\Output\STARTUP.obj",
+".\Output\Main.obj",
+".\Output\key.obj",
+".\Output\eeprom.obj",
+".\Output\timer.obj",
+".\Output\buzzer.obj",
+".\Output\HC89F30x_GeneralKey_Touch_Lib_CFG.obj",
+".\Output\HC89F30x_GeneralKey_Touch_Filter.obj",
+".\Output\HC89F30x_GeneralKey_Touch_Multibutton.obj",
+"..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_V1.04.LIB",
+".\Output\HC89F30x_TouchUartDebug_Lib_CFG.obj",
+"..\..\Libraries\HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebug_Lib_V1.00.LIB",
+".\Output\HC89F30x_IO_INIT.obj",
+".\Output\HC89F30x_ISR.obj",
+".\Output\HC89F30x_PORT_MAP.obj",
+".\Output\HC89F30x_SYS.obj" 
+TO ".\Output\HC89F30x_Touch_Library_Code" 
+
+PRINT(".\List\HC89F30x_Touch_Library_Code.map") DISABLEWARNING (16,57) 

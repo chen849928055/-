@@ -1,0 +1,227 @@
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_LIB_CFG                                 05/11/2020 22:35:56 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HC89F30X_GENERALKEY_TOUCH_LIB_CFG
+OBJECT MODULE PLACED IN .\Output\HC89F30x_GeneralKey_Touch_Lib_CFG.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_
+                    -Touch_Lib_CFG.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) D
+                    -EBUG PRINT(.\List\HC89F30x_GeneralKey_Touch_Lib_CFG.lst) TABS(2) OBJECT(.\Output\HC89F30x_GeneralKey_Touch_Lib_CFG.obj)
+
+line level    source
+
+   1          /******************* (C) COPYRIGHT 2009~2019 holychip **************************
+   2          * File Name          : HC89F30x_GeneralKey_Touch_Lib_CFG.c
+   3          * Author             : Touch Team
+   4          * Version            : V1.0.5.0
+   5          * Date               : 2019/10/01
+   6          ********************************************************************************
+   7          
+   8          注：本文件不建议用户自行修改！
+   9          
+  10          *******************************************************************************/
+  11          //===================================================================================================
+  12          #include "HC_DEFINE.H"
+  13          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_CFG.h"
+  14          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Filter.h"
+  15          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Multibutton.h"
+  16          
+  17          //===================================================================================================
+  18          #define HexadecimalToBinary(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)  \
+  19          (                               \
+  20            (a<<15)+(b<<14)+(c<<13)+(d<<12)+              \
+  21            (e<<11)+(f<<10)+(g<<9)+(h<<8)+                \
+  22            (i<<7)+(j<<6)+(k<<5)+(l<<4)+                \
+  23            (m<<3)+(n<<2)+(o<<1)+(p<<0)                 \
+  24          )
+  25          #define TKBIN HexadecimalToBinary
+  26          
+  27          //===================================================================================================
+  28          #if (HCTouchLib_IC_BODY == IC_BODY_SOP16)
+  29          #pragma message "IC Body: HC89F301-SOP16"
+*** MESSAGE C286 IN LINE 29 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_CFG.c: 
+             -IC Body: HC89F301-SOP16
+  30          #define TK_CH_MAX     7
+  31          uc8 CODE_INTERNAL_INDEX[TK_CH_MAX] = {2, 7, 11, 12, 13, 14, 15};
+  32          
+  33          #elif (HCTouchLib_IC_BODY == IC_BODY_SOP20_DIP20)
+              #pragma message "IC Body: HC89F302-SOP20/DIP20"
+              #define TK_CH_MAX     10
+              uc8 CODE_INTERNAL_INDEX[TK_CH_MAX] = {2, 3, 7, 9, 10, 11, 12, 13, 14, 15};
+              
+              #elif (HCTouchLib_IC_BODY == IC_BODY_SOP24)
+              #pragma message "IC Body: HC89F302-SOP24"
+              #define TK_CH_MAX     12
+              uc8 CODE_INTERNAL_INDEX[TK_CH_MAX] = {0, 1, 2, 3, 7, 9, 10, 11, 12, 13, 14, 15};
+              
+              #elif (HCTouchLib_IC_BODY == IC_BODY_SOP28)
+              #pragma message "IC Body: HC89F303-SOP28"
+              #define TK_CH_MAX     16
+              uc8 CODE_INTERNAL_INDEX[TK_CH_MAX] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+              
+              #else
+              #define TK_CH_MAX     1
+              uc8 CODE_INTERNAL_INDEX[TK_CH_MAX] = {0};
+              #error "No IC Body,Please reconfigure HCTouchLib_IC_BODY"
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_LIB_CFG                                 05/11/2020 22:35:56 PAGE 2   
+
+              #endif
+  53          
+  54          //===================================================================================================
+  55          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_Message.h"
+*** MESSAGE C286 IN LINE 30 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_M
+             -essage.h: TK13：Enable
+*** MESSAGE C286 IN LINE 33 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_M
+             -essage.h: TK14：Enable
+*** MESSAGE C286 IN LINE 36 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_M
+             -essage.h: TK15：Enable
+*** MESSAGE C286 IN LINE 226 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK采样频率：Fosc/2
+*** MESSAGE C286 IN LINE 235 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK充放电频率：Fosc/8
+*** MESSAGE C286 IN LINE 247 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK充电电源电压：3V
+*** MESSAGE C286 IN LINE 253 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK充放电伪随机：打开
+*** MESSAGE C286 IN LINE 256 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK参考电压：0.60V
+*** MESSAGE C286 IN LINE 274 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK放电电阻：32
+*** MESSAGE C286 IN LINE 280 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK调制电容：内置电容
+*** MESSAGE C286 IN LINE 283 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK连续扫描模式：打开
+*** MESSAGE C286 IN LINE 286 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK扫描补偿：关闭
+*** MESSAGE C286 IN LINE 326 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK低基准线复位: 打开
+*** MESSAGE C286 IN LINE 335 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK通道校准: 关闭
+*** MESSAGE C286 IN LINE 341 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK RawData递推中位值平均滤波: 关闭
+*** MESSAGE C286 IN LINE 350 OF ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_Build_
+             -Message.h: CTK 最强按键: 关闭
+  56          
+  57          //===================================================================================================
+  58          #if ((HCTouchLib_TK_CH_MASK & (0xFFFF >> (16 - TK_CH_MAX))) == 0)
+              #error "No channel is enabled,Please reconfigure HCTouchLib_TK_CH_MASK"
+              #endif
+  61          
+  62          //===================================================================================================
+  63          //开启的检测通道个数
+  64          #define HCTouchLib_OPENED_TK_AMOUNT \
+  65          ((HCTouchLib_TK_CH_MASK>> 0 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 1 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 2 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>> 3 & 0x01L)+\
+  66           (HCTouchLib_TK_CH_MASK>> 4 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 5 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 6 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>> 7 & 0x01L)+\
+  67           (HCTouchLib_TK_CH_MASK>> 8 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 9 & 0x01L)+(HCTouchLib_TK_CH_MASK>>10 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>>11 & 0x01L)+\
+  68           (HCTouchLib_TK_CH_MASK>>12 & 0x01L)+(HCTouchLib_TK_CH_MASK>>13 & 0x01L)+(HCTouchLib_TK_CH_MASK>>14 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>>15 & 0x01L))
+  69          
+  70          #define  USERDATA  HCTouchLib_OPENED_TK_AMOUNT 
+  71          
+  72          //===================================================================================================
+  73          #define HCTouchLib_NOISE_THRESHOLD { \
+  74           HCTouchLib_SET0_N_THRESHOLD,  HCTouchLib_SET1_N_THRESHOLD,  HCTouchLib_SET2_N_THRESHOLD,  HCTouchLib_SET3
+             -_N_THRESHOLD,  \
+  75           HCTouchLib_SET4_N_THRESHOLD,  HCTouchLib_SET5_N_THRESHOLD,  HCTouchLib_SET6_N_THRESHOLD,  HCTouchLib_SET7
+             -_N_THRESHOLD,  \
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_LIB_CFG                                 05/11/2020 22:35:56 PAGE 3   
+
+  76           HCTouchLib_SET8_N_THRESHOLD,  HCTouchLib_SET9_N_THRESHOLD,  HCTouchLib_SET10_N_THRESHOLD, HCTouchLib_SET1
+             -1_N_THRESHOLD, \
+  77           HCTouchLib_SET12_N_THRESHOLD, HCTouchLib_SET13_N_THRESHOLD, HCTouchLib_SET14_N_THRESHOLD, HCTouchLib_SET1
+             -5_N_THRESHOLD  \
+  78          }
+  79          
+  80          #define HCTouchLib_FINGER_THRESHOLD { \
+  81           HCTouchLib_SET0_F_THRESHOLD,  HCTouchLib_SET1_F_THRESHOLD,  HCTouchLib_SET2_F_THRESHOLD,  HCTouchLib_SET3
+             -_F_THRESHOLD,  \
+  82           HCTouchLib_SET4_F_THRESHOLD,  HCTouchLib_SET5_F_THRESHOLD,  HCTouchLib_SET6_F_THRESHOLD,  HCTouchLib_SET7
+             -_F_THRESHOLD,  \
+  83           HCTouchLib_SET8_F_THRESHOLD,  HCTouchLib_SET9_F_THRESHOLD,  HCTouchLib_SET10_F_THRESHOLD, HCTouchLib_SET1
+             -1_F_THRESHOLD, \
+  84           HCTouchLib_SET12_F_THRESHOLD, HCTouchLib_SET13_F_THRESHOLD, HCTouchLib_SET14_F_THRESHOLD, HCTouchLib_SET1
+             -5_F_THRESHOLD  \
+  85          }
+  86          
+  87          //===================================================================================================
+  88          uc16  CODE_TK_CH_MASK                 = HCTouchLib_TK_CH_MASK;
+  89          uc8   CODE_CHANNEL_CALIBRATE_SW       = 0;
+  90          uc8   CODE_CALIBRATE_DEFLECTED_AREA   = 20;
+  91          uc8   CODE_CALIBRATE_TARGET_LINE      = 0;
+  92          uc8   CODE_DSCR                       = HCTouchLib_DSCR;
+  93          uc8   CODE_CTKDS_PRSDIV               = (0 << 4) | (1 << 3) | HCTouchLib_PRSDIV;
+  94          uc8   CODE_VD_RV                      = (HCTouchLib_VD << 4) | 0;
+  95          uc8   CODE_RBS                        = (0 << 7) | HCTouchLib_RBS;
+  96          uc8   CODE_Continue_Scan_SW           = 1;
+  97          uc8   CODE_OFFSET_SW                  = 0;
+  98          uc16  CODE_OVERHIGH_TIME              = HCTouchLib_OVERHIGH_TIME;
+  99          uc16  CODE_OVERLOW_TIME               = HCTouchLib_OVERLOW_TIME;
+ 100          uc8   CODE_CONFIRM_TOUCH_TIME         = HCTouchLib_CONFIRM_TOUCH_TIME;
+ 101          uc8   CODE_CONFIRM_NOTOUCH_TIME       = HCTouchLib_CONFIRM_NOTOUCH_TIME;
+ 102          uc8   CODE_LIMIT_FACTOR               = HCTouchLib_LIMIT_FACTOR;
+ 103          uc8   CODE_BARREL_CAPACITY            = HCTouchLib_NOISE_BARREL_CAPACITY;
+ 104          uc16  CODE_NOISE_THRESHOLD[16]        = HCTouchLib_NOISE_THRESHOLD;
+ 105          uc16  CODE_FINGER_THRESHOLD[16]       = HCTouchLib_FINGER_THRESHOLD;
+ 106          uc8   CODE_OPENED_TK_AMOUNT           = HCTouchLib_OPENED_TK_AMOUNT;
+ 107          uc8   CODE_Hysteresis         = HCTouchLib_Hysteresis;
+ 108          uc8   CODE_TK_CH_MAX                  = TK_CH_MAX;
+ 109          uc8   CODE_FILTER_DEPTH       = HCTouchLib_FILTER_DEPTH;
+ 110          
+ 111          //===================================================================================================
+ 112          ux16  XDATA_RawData    [HCTouchLib_OPENED_TK_AMOUNT];
+ 113          ux16  XDATA_RawDataBuf [HCTouchLib_OPENED_TK_AMOUNT];
+ 114          sx16  XDATA_BaseLine   [HCTouchLib_OPENED_TK_AMOUNT];
+ 115          ux16  XDATA_OverLowCnt [HCTouchLib_OPENED_TK_AMOUNT];
+ 116          ux16  XDATA_OverHighCnt[HCTouchLib_OPENED_TK_AMOUNT];
+ 117          ux8   XDATA_TouchCnt   [HCTouchLib_OPENED_TK_AMOUNT];
+ 118          ux8   XDATA_NoTouchCnt [HCTouchLib_OPENED_TK_AMOUNT];
+ 119          sx16  XDATA_DifferAccum[HCTouchLib_OPENED_TK_AMOUNT];
+ 120          ux16  XDATA_LongRstCnt [HCTouchLib_OPENED_TK_AMOUNT];
+ 121          ux16  XDATA_THRNoiseCnt[HCTouchLib_OPENED_TK_AMOUNT];
+ 122          ux8   XDATA_AccessIndex[TK_CH_MAX];
+ 123          ux16  XDATA_CONFIRM_LONGTOUCH_TIME  = HCTouchLib_CONFIRM_LONGTOUCH_TIME;
+ 124          ux16  XDATA_THRESHOLD_NOISE_TIME    = HCTouchLib_CONFIRM_LONGTOUCH_TIME;
+ 125          ux8   XDATA_THRESHOLD_RATIO     = 10;
+ 126          ux8   XDATA_FineTuning        = 2;
+ 127          
+ 128          /******************************************************************************************************
+ 129           * Revision history:
+ 130           *
+ 131           * Revision 1.01    2017/12/18 14:10 Taboo.Z
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_LIB_CFG                                 05/11/2020 22:35:56 PAGE 4   
+
+ 132           * Revision 1.0.2.0 2018/07/20 16:31 Jing.L
+ 133           * Revision 1.0.3.0 2018/09/10 14:38 Jing.L
+ 134           * Add: 1、增加迟滞以及触摸自动复位参数
+ 135           *    2、固定了部分参数设置
+ 136           * Revision 1.0.4.0 2019/03/06 13:59 Touch Team
+ 137           * Add: 1、按键最长有效时间程序中可做调整
+ 138           *    2、增加部分函数内部使用参数
+ 139           *    3、增加一个16位的LONGTOBIN，仅供配置TK通道使用
+ 140           * Revision 1.0.5.0 2019/09/17 19:11 Touch Team 
+ 141           *      1、增加阈值噪声参数
+ 142           *    2、增加阈值比例
+ 143           *    3、增加噪声桶调整步进
+ 144           *
+ 145           ******************************************************************************************************/
+ 146           
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =     94    ----
+   XDATA SIZE       =     67    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

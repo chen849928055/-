@@ -1,0 +1,1 @@
+"..\..\Utilities\eeprom.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\eeprom.lst) TABS (2) OBJECT(.\Output\eeprom.obj)

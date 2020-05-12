@@ -1,0 +1,1 @@
+"..\..\Utilities\relay.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\relay.lst) TABS (2) OBJECT(.\Output\relay.obj)

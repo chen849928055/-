@@ -1,0 +1,141 @@
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_FILTER                                  05/11/2020 22:35:56 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HC89F30X_GENERALKEY_TOUCH_FILTER
+OBJECT MODULE PLACED IN .\Output\HC89F30x_GeneralKey_Touch_Filter.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_
+                    -Touch_Filter.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DE
+                    -BUG PRINT(.\List\HC89F30x_GeneralKey_Touch_Filter.lst) TABS(2) OBJECT(.\Output\HC89F30x_GeneralKey_Touch_Filter.obj)
+
+line level    source
+
+   1          /******************* (C) COPYRIGHT 2009~2019 holychip **************************
+   2          * File Name          : HC89F30x_GeneralKey_Touch_Filter.c
+   3          * Author             : Touch Team
+   4          * Version            : V1.0.5.0
+   5          * Date               : 2019/10/01
+   6          ********************************************************************************
+   7          
+   8          注：本文件不建议用户自行修改！
+   9          
+  10          *******************************************************************************/
+  11          #include "HC89F303.h"
+  12          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib.h"
+  13          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Filter.h"
+  14          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_CFG.h"
+  15          
+  16          
+  17          //===================================================================================================
+  18          /***********************************调用相关库参数，用户不需修改************************************/
+  19          #define HexadecimalToBinary(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)  \
+  20          (                               \
+  21            (a<<15)+(b<<14)+(c<<13)+(d<<12)+              \
+  22            (e<<11)+(f<<10)+(g<<9)+(h<<8)+                \
+  23            (i<<7)+(j<<6)+(k<<5)+(l<<4)+                \
+  24            (m<<3)+(n<<2)+(o<<1)+(p<<0)                 \
+  25          )
+  26          
+  27          #define TKBIN HexadecimalToBinary
+  28          
+  29          #define HCTouchLib_OPENED_TK_AMOUNT \
+  30          ((HCTouchLib_TK_CH_MASK>> 0 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 1 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 2 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>> 3 & 0x01L)+\
+  31           (HCTouchLib_TK_CH_MASK>> 4 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 5 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 6 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>> 7 & 0x01L)+\
+  32           (HCTouchLib_TK_CH_MASK>> 8 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 9 & 0x01L)+(HCTouchLib_TK_CH_MASK>>10 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>>11 & 0x01L)+\
+  33           (HCTouchLib_TK_CH_MASK>>12 & 0x01L)+(HCTouchLib_TK_CH_MASK>>13 & 0x01L)+(HCTouchLib_TK_CH_MASK>>14 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>>15 & 0x01L))
+  34           
+  35          extern ux16 XDATA_RawData[];          //滤波后RawData
+  36          extern ux16 XDATA_RawDataBuf[];         //采集所得RawData
+  37          
+  38          //===================================================================================================
+  39          #if HCTouchLib_FILTER_DEPTH 
+              ux16 XDATA_RawData_Filter[HCTouchLib_OPENED_TK_AMOUNT][HCTouchLib_FILTER_DEPTH];
+              #endif  
+  42          
+  43          //===================================================================================================
+  44          #if HCTouchLib_FILTER_DEPTH           //使能滤波
+              static void BubbleSort(u16 fui_ArrData_a[], u8 fuc_Len)
+              {
+                  u16 fui_Temp = 0;
+                  u8 fuc_i = 0, fuc_j = 0;
+                  for (fuc_i=0; fuc_i<fuc_Len-1; fuc_i++)
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_FILTER                                  05/11/2020 22:35:56 PAGE 2   
+
+                {
+                      for (fuc_j=0; fuc_j<fuc_Len-1-fuc_i; fuc_j++) 
+                  { 
+                          if (fui_ArrData_a[fuc_j] > fui_ArrData_a[fuc_j+1]) 
+                    { 
+                              fui_Temp = fui_ArrData_a[fuc_j];
+                              fui_ArrData_a[fuc_j] = fui_ArrData_a[fuc_j+1];
+                              fui_ArrData_a[fuc_j+1] = fui_Temp;
+                          }
+                      } 
+                }
+              }
+              #endif  
+  63          
+  64          
+  65          void TouchRawDataFilter(void)
+  66          {
+  67   1      #if HCTouchLib_FILTER_DEPTH           
+              //使能滤波
+                unsigned char fuc_i = 0, fuc_j = 0, fuc_z = 0;
+                unsigned long ful_Num[HCTouchLib_OPENED_TK_AMOUNT] = {0x00};
+                for(fuc_i = 0; fuc_i < HCTouchLib_OPENED_TK_AMOUNT; fuc_i++)
+                {
+                  XDATA_RawData_Filter[fuc_i][HCTouchLib_FILTER_DEPTH-1] = XDATA_RawDataBuf[fuc_i];
+                  for(fuc_j = 0; fuc_j<HCTouchLib_FILTER_DEPTH-1; fuc_j++)
+                  {
+                    XDATA_RawData_Filter[fuc_i][fuc_j] = XDATA_RawData_Filter[fuc_i][fuc_j+1];
+                  }
+                  BubbleSort(XDATA_RawData_Filter[fuc_i],HCTouchLib_FILTER_DEPTH);
+                  for(fuc_z = 1; fuc_z<HCTouchLib_FILTER_DEPTH-1; fuc_z++)
+                  {
+                    ful_Num[fuc_i] += XDATA_RawData_Filter[fuc_i][fuc_z];
+                  }
+                  ful_Num[fuc_i] /=  (HCTouchLib_FILTER_DEPTH-2);
+                  XDATA_RawData[fuc_i] = (u16)(ful_Num[fuc_i]); 
+                }
+              #else                     //没有使能滤波
+  87   1        unsigned char fuc_i = 0;
+  88   1        for(fuc_i = 0;fuc_i < HCTouchLib_OPENED_TK_AMOUNT;fuc_i++)
+  89   1        {
+  90   2          XDATA_RawData[fuc_i] = XDATA_RawDataBuf[fuc_i];
+  91   2        } 
+  92   1      #endif
+  93   1      }
+  94          
+  95          /******************************************************************************************************
+  96           * Revision history:
+  97           *
+  98           * Revision 1.01    2017/12/18 14:10 Taboo.Z
+  99           * Revision 1.0.2.0 2018/07/20 16:31 Jing.L
+ 100           * Revision 1.0.3.0 2018/09/10 14:38 Jing.L
+ 101           * Revision 1.0.4.0 2019/03/06 13:59 Touch Team
+ 102           * Revision 1.0.5.0 2019/09/17 19:23 Touch Team
+ 103           * Add: 1、首次增加RawData滤波功能
+ 104           ******************************************************************************************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     69    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_FILTER                                  05/11/2020 22:35:56 PAGE 3   
+
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,1 @@
+"..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Filter.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\HC89F30x_GeneralKey_Touch_Filter.lst) TABS (2) OBJECT(.\Output\HC89F30x_GeneralKey_Touch_Filter.obj)

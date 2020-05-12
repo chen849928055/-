@@ -1,0 +1,175 @@
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_MULTIBUTTON                             05/11/2020 22:35:56 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HC89F30X_GENERALKEY_TOUCH_MULTIBUTTON
+OBJECT MODULE PLACED IN .\Output\HC89F30x_GeneralKey_Touch_Multibutton.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Libraries\HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_
+                    -Touch_Multibutton.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilitie
+                    -s) DEBUG PRINT(.\List\HC89F30x_GeneralKey_Touch_Multibutton.lst) TABS(2) OBJECT(.\Output\HC89F30x_GeneralKey_Touch_Multi
+                    -button.obj)
+
+line level    source
+
+   1          /******************* (C) COPYRIGHT 2009~2019 holychip **************************
+   2          * File Name          : HC89F30x_GeneralKey_Touch_Multibutton.c
+   3          * Author             : Touch Team
+   4          * Version            : V1.0.5.0
+   5          * Date               : 2019/10/01
+   6          ********************************************************************************
+   7          
+   8          注：本文件不建议用户自行修改！
+   9          
+  10          *******************************************************************************/
+  11          #include "HC89F303.h"
+  12          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib.h"
+  13          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Multibutton.h"
+  14          #include "HC89F30x_GeneralKey_Touch_Lib_V1.04\HC89F30x_GeneralKey_Touch_Lib_CFG.h"
+  15          #include <string.h>
+  16          
+  17          
+  18          //===================================================================================================
+  19          /***********************************调用相关库参数，用户不需修改************************************/
+  20          #define HexadecimalToBinary(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p)  \
+  21          (                               \
+  22            (a<<15)+(b<<14)+(c<<13)+(d<<12)+              \
+  23            (e<<11)+(f<<10)+(g<<9)+(h<<8)+                \
+  24            (i<<7)+(j<<6)+(k<<5)+(l<<4)+                \
+  25            (m<<3)+(n<<2)+(o<<1)+(p<<0)                 \
+  26          )
+  27          
+  28          #define TKBIN HexadecimalToBinary
+  29          
+  30          #define HCTouchLib_OPENED_TK_AMOUNT \
+  31          ((HCTouchLib_TK_CH_MASK>> 0 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 1 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 2 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>> 3 & 0x01L)+\
+  32           (HCTouchLib_TK_CH_MASK>> 4 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 5 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 6 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>> 7 & 0x01L)+\
+  33           (HCTouchLib_TK_CH_MASK>> 8 & 0x01L)+(HCTouchLib_TK_CH_MASK>> 9 & 0x01L)+(HCTouchLib_TK_CH_MASK>>10 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>>11 & 0x01L)+\
+  34           (HCTouchLib_TK_CH_MASK>>12 & 0x01L)+(HCTouchLib_TK_CH_MASK>>13 & 0x01L)+(HCTouchLib_TK_CH_MASK>>14 & 0x01
+             -L)+(HCTouchLib_TK_CH_MASK>>15 & 0x01L))
+  35           
+  36          extern ux16 XDATA_RawData[];          //滤波后RawData
+  37          extern sx16 XDATA_BaseLine[];         //Baseline
+  38          extern uc8 CODE_INTERNAL_INDEX[];       //对应IC的通道号
+  39          extern uc8 CODE_TK_CH_MAX;            //对应IC的通道总数
+  40          
+  41          //===================================================================================================
+  42          #if HCTouchLib_MULTIBUTTON
+              unsigned char code nuc_OpenTouchChannel_a[HCTouchLib_OPENED_TK_AMOUNT] = HCTouchLib_OPENTOUCHCHANNEL;
+              #endif  
+  45          
+  46          //===================================================================================================
+  47          #if HCTouchLib_MULTIBUTTON            //使能多按键处理
+              static void BubbleSort(s16 fi_ArrDataOne_a[], u8 fuc_ArrDataTwo_a[], u8 fuc_Len)
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_MULTIBUTTON                             05/11/2020 22:35:56 PAGE 2   
+
+              {
+                  s16 fi_TempOne = 0;
+                u8  fuc_TempTwo = 0;
+                  u8 fuc_i = 0, fuc_j = 0;
+                  for (fuc_i=0; fuc_i<fuc_Len-1; fuc_i++)
+                {
+                      for (fuc_j=0; fuc_j<fuc_Len-1-fuc_i; fuc_j++) 
+                  { 
+                          if (fi_ArrDataOne_a[fuc_j] > fi_ArrDataOne_a[fuc_j+1]) 
+                    { 
+                              fi_TempOne = fi_ArrDataOne_a[fuc_j];
+                              fi_ArrDataOne_a[fuc_j] = fi_ArrDataOne_a[fuc_j+1];
+                              fi_ArrDataOne_a[fuc_j+1] = fi_TempOne;
+                      
+                      fuc_TempTwo = fuc_ArrDataTwo_a[fuc_j];
+                      fuc_ArrDataTwo_a[fuc_j] = fuc_ArrDataTwo_a[fuc_j+1];
+                      fuc_ArrDataTwo_a[fuc_j+1] = fuc_TempTwo;
+                          }
+                      } 
+                }
+              }
+              
+              char Search(u8 fuc_SearchData, u8 fuc_ArrData_a[], u8 fuc_Len)
+              {
+                s8 fc_Ret = -1;
+                u8 fuc_i = 0;
+                for(fuc_i=0; fuc_i<fuc_Len; fuc_i++)
+                {
+                  if(fuc_ArrData_a[fuc_i] == fuc_SearchData)
+                  {
+                    fc_Ret = fuc_i;
+                    break;
+                  }
+                }
+                return fc_Ret;
+              }
+              #endif  
+  86          
+  87          
+  88          
+  89          void TouchMultibuttonHandle(void)
+  90          {
+  91   1      #if HCTouchLib_MULTIBUTTON  
+                u8  fuc_TouchKeyFlagNum = 0;
+                u8  fuc_i = 0;
+                s8  fc_ChannelLocation  = 0;  
+                s16 fi_MultibuttonDiffer_a[HCTouchLib_OPENED_TK_AMOUNT] = {0x0000};
+                u8  fuc_BubbleSortChannel_a[HCTouchLib_OPENED_TK_AMOUNT] = {0x00};
+              
+                fuc_TouchKeyFlagNum = (TouchKeyFlag>> 0 & 0x01L)+(TouchKeyFlag>> 1 & 0x01L)+(TouchKeyFlag>> 2 & 0x01L)+(T
+             -ouchKeyFlag>> 3 & 0x01L)+\
+                            (TouchKeyFlag>> 4 & 0x01L)+(TouchKeyFlag>> 5 & 0x01L)+(TouchKeyFlag>> 6 & 0x01L)+(TouchKeyFlag>> 7
+             - & 0x01L)+\
+                            (TouchKeyFlag>> 8 & 0x01L)+(TouchKeyFlag>> 9 & 0x01L)+(TouchKeyFlag>>10 & 0x01L)+(TouchKeyFlag>>11
+             - & 0x01L)+\
+                            (TouchKeyFlag>>12 & 0x01L)+(TouchKeyFlag>>13 & 0x01L)+(TouchKeyFlag>>14 & 0x01L)+(TouchKeyFlag>>15
+             - & 0x01L);
+                //计算同时有几个通道同时有效
+                if(fuc_TouchKeyFlagNum >= 2)
+                {
+                  for(fuc_i = 0;fuc_i < HCTouchLib_OPENED_TK_AMOUNT;fuc_i++)
+                  {
+C51 COMPILER V9.60.0.0   HC89F30X_GENERALKEY_TOUCH_MULTIBUTTON                             05/11/2020 22:35:56 PAGE 3   
+
+                    fi_MultibuttonDiffer_a[fuc_i] = XDATA_RawData[fuc_i] - XDATA_BaseLine[fuc_i];
+                  }
+                  memcpy(fuc_BubbleSortChannel_a,nuc_OpenTouchChannel_a,HCTouchLib_OPENED_TK_AMOUNT);
+                  //每次排序都重新更新通道排序
+                  BubbleSort(fi_MultibuttonDiffer_a,fuc_BubbleSortChannel_a,HCTouchLib_OPENED_TK_AMOUNT);
+                  //冒泡排序，将最大的通道放到fuc_BubbleSortChannel_a[HCTouchLib_OPENED_TK_AMOUNT-1]中
+                  fc_ChannelLocation = Search(fuc_BubbleSortChannel_a[HCTouchLib_OPENED_TK_AMOUNT-1],CODE_INTERNAL_INDEX,C
+             -ODE_TK_CH_MAX);
+                  //
+                  if(fc_ChannelLocation!= -1)
+                  {
+                    TouchKeyFlag = (0x01<<fc_ChannelLocation);
+                  }
+                }
+              #endif    
+ 121   1      }
+ 122          
+ 123          /******************************************************************************************************
+ 124           * Revision history:
+ 125           *
+ 126           * Revision 1.01    2017/12/18 14:10 Taboo.Z
+ 127           * Revision 1.0.2.0 2018/07/20 16:31 Jing.L
+ 128           * Revision 1.0.3.0 2018/09/10 14:38 Jing.L
+ 129           * Revision 1.0.4.0 2019/03/06 13:59 Touch Team
+ 130           * Revision 1.0.5.0 2019/09/17 19:23 Touch Team
+ 131           * Add: 1、首次增加最强按键功能
+ 132           ******************************************************************************************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      1    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

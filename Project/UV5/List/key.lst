@@ -1,0 +1,298 @@
+C51 COMPILER V9.60.0.0   KEY                                                               05/11/2020 22:35:55 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Output\key.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Utilities\key.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Applica
+                    -tion;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\key.lst) TABS(2) OBJECT(.\Output\key.obj)
+
+line level    source
+
+   1          /***************************************************************************
+   2          *  ¶ÀÁ¢°´¼üµÄ³õÊ¼»¯¼°Æä¹¦ÄÜº¯Êý
+   3          *
+   4          * ÎÄ ¼þ: key.c
+   5          * ×÷ Õß: CJW
+   6          * Ëµ Ã÷£º¶ÀÁ¢°´¼üµÄ³õÊ¼»¯¼°Æä¹¦ÄÜº¯Êý
+   7          * ±àÐ´Ê±¼ä: 2016.7.20
+   8          * ±àÒë»·¾³ : RealView MDK-ARM 4.73
+   9          * °æ ±¾£º1.0
+  10          * ÐÞ¸ÄÈÕÆÚ£º ÎÞ
+  11           
+  12          *---------------------------------------------------------------------------
+  13          * ×¢: //00±íÊ¾Ã»ÓÐ°´¼ü
+  14                //01±íÊ¾°´¼ü1
+  15                //02±íÊ¾°´¼ü2
+  16                //04±íÊ¾°´¼ü3
+  17                //08±íÊ¾°´¼ü4
+  18                //10±íÊ¾°´¼ü5
+  19          *****************************************************************************/
+  20          #include "key.h"
+  21          #include "timer.h"
+  22           
+  23          
+  24           
+  25          
+  26          //°´¼ü³õÊ¼»¯º¯Êý
+  27          /************** °´¼ü³õÊ¼»¯º¯Êý*******************************
+  28          * ËµÃ÷: °´¼ü³õÊ¼»¯º¯Êý
+  29          * Èë¿Ú²ÎÊý:ÎÞ
+  30          * ³ö¿Ú²ÎÊý:ÎÞ
+  31          * ×¢: key1->PD1  key2->PB9  keywakeup->PC15
+  32          ***************************************************************/  
+  33          extern ux16 KEY_VALUE ;   
+  34          u8 Get_Key(void) //IO³õÊ¼»¯
+  35          {
+  36   1        u8 ReadKey=0;
+  37   1          if (KEY_VALUE == 0x10) //Shift  K4
+  38   1          {
+  39   2            ReadKey |= K_1;
+  40   2          }
+  41   1          else
+  42   1          {
+  43   2            ReadKey &= ~K_1;
+  44   2          }
+  45   1          if (KEY_VALUE == 0x20) //Up     K3
+  46   1          {
+  47   2            ReadKey |= K_2;     
+  48   2          }
+  49   1          else
+  50   1          {
+  51   2            ReadKey &= ~K_2;      
+  52   2          }
+  53   1          if (KEY_VALUE == 0x40) //Down    K2
+  54   1          {
+C51 COMPILER V9.60.0.0   KEY                                                               05/11/2020 22:35:55 PAGE 2   
+
+  55   2            ReadKey |= K_3;
+  56   2          }
+  57   1          else
+  58   1          {
+  59   2            ReadKey &= ~K_3;
+  60   2          }
+  61   1           
+  62   1          return ReadKey;    
+  63   1            
+  64   1      }
+  65           
+  66          /********************************************************************************************
+  67          * eKEY ReadKey(void);
+  68          * ¹¦ÄÜ: ¶ÀÁ¢°´¼üÉ¨Ãè,10msÉ¨ÃèÒ»´Î.
+  69          * ·µ»ØÖµ:Ã¶¾ÙÀàÐÍ,{NO_KEY,STOP,START,SEL,ADD,DEC,SETUP}. 
+  70          * ²ÎÊý: 
+  71          ********************************************************************************************/
+  72           
+  73          unsigned int key_time = 0;                    // ³¤°´¼ü¼ÆÊ±
+  74           
+  75          u8 Read_Key(void)
+  76          {
+  77   1              
+  78   1              static unsigned char key_state = 0;                  // ¼ÇÂ¼°´¼üÉ¨µ±Ç°Ãè×´Ì¬
+  79   1              static unsigned char key_press_old = 0;              // ¼ÇÂ¼ÉÏÒ»´Î°´¼ü×´Ì¬
+  80   1              static unsigned char key_value_old = K_NO ;          // ±£´æÉÏÒ»´Î°´¼ü·µ»ØÖµ
+  81   1              unsigned char key_return = K_NO;                     // °´¼ü¹¦ÄÜ·µ»ØÖµ
+  82   1              unsigned char key_press;
+  83   1              
+  84   1              key_press = Get_Key();                               // ¶Á°´¼üI/OµçÆ½,Ö»±£Áô±»°´ÏÂµÄ¼ü(±»°´ÏÂµÄ¼üÎ
+             -»Îª1)
+  85   1              switch (key_state)
+  86   1              {
+  87   2                  case key_state_0:                                // 1.°´¼ü³õÊ¼Ì¬
+  88   2                          if (key_press)
+  89   2                          { 
+  90   3                                  key_state = key_state_1;               // ¼ü±»°´ÏÂ,×´Ì¬×ª»»µ½°´¼üÈ·ÈÏÌ¬
+  91   3                                  key_press_old = key_press;             // ±£´æµ±Ç°°´¼ü×´Ì¬
+  92   3                          }
+  93   2                          break;
+  94   2                  case key_state_1:                                        // 2.°´¼üÈ·ÈÏÌ¬
+  95   2                          if (key_press == key_press_old)                  // Óë³õÊ¼Ì¬µÄ°´¼ü×´Ì¬ÏàÍ¬?
+  96   2                          {
+  97   3                            key_time = 0;                                  // ÇåÁã°´¼üÊ±¼ä¼ÆÊýÆ÷
+  98   3                            switch(key_press)
+  99   3                            {
+ 100   4                              case K_1:
+ 101   4                                      key_state  = key_state_2;                         // ×ª°´¼üÊÍ·ÅÌ¬
+ 102   4                                      key_return = K_1;                               // "+"¼ü
+ 103   4                                      break;
+ 104   4                              case K_2:
+ 105   4                                      key_state  = key_state_2;                         // ×ª°´¼üÊÍ·ÅÌ¬
+ 106   4                                      key_return = K_2;                               // "-"¼ü                                  
+             -              
+ 107   4                                      break;        
+ 108   4                              case K_3:
+ 109   4                                      key_state  = key_state_2;                         // ×ª³¤°´¼üÌ¬
+ 110   4                                      key_return = K_3;                             // "µçÔ´"¼ü                                 
+             -                               
+ 111   4                                      break;        
+ 112   4                              case K_Back:
+ 113   4                                      key_state  = key_state_2;                         // ×ª³¤°´¼üÌ¬
+C51 COMPILER V9.60.0.0   KEY                                                               05/11/2020 22:35:55 PAGE 3   
+
+ 114   4                                      key_return = K_Back;                            // "·µ»Ø"¼ü
+ 115   4                                      break;        
+ 116   4                              case K_Enter:
+ 117   4                                      key_state  = key_state_2;                         // ×ª³¤°´¼üÌ¬
+ 118   4                                      key_return = K_Enter;                             // "È·ÈÏ"¼ü
+ 119   4                                      break;
+ 120   4                              case K_1|K_2:                                        // "×éºÏ"¼ü,³¤°´¼ü
+ 121   4                                      key_state  = key_state_2;                        // ×éºÏ¼ü°´¼üÈÔ°´ÏÂ£¬×´Ì¬×ª»»µ½¼ÆÊ±1
+ 122   4                                      break;  
+ 123   4            
+ 124   4                              default:
+ 125   4                                      key_state  = key_state_4;                         // ×ª°´¼üÊÍ·ÅÌ¬
+ 126   4                                      break;
+ 127   4                            }
+ 128   3                          }
+ 129   2                          else if (!key_press)
+ 130   2                              key_state = key_state_0;                                   // °´¼üÒÑÌ§Æð(ÊÇ¸ÉÈÅ),×ª»»µ½°´¼ü³õÊ
+             -¼Ì¬
+ 131   2                          else
+ 132   2                                  key_state = key_state_4;                               // °´¼üÒÑ·¢Éú±ä»¯,×ªµ½°´¼üÊÍ·ÅÌ¬ 
+ 133   2                                  
+ 134   2                          key_value_old = key_return;                                     // ±£´æ°´¼ü·µ»ØÖµ
+ 135   2                          break;
+ 136   2                  case key_state_2:                                                       // 3.³¤°´¼üÈ·ÈÏÌ¬
+ 137   2                         
+ 138   2                          if (key_press == key_press_old) 
+ 139   2                          {
+ 140   3       
+ 141   3                              if (key_press == (K_1|K_2))                        // "ÅäÖÃ"¼ü
+ 142   3                              {
+ 143   4                                                                                     // °´¼ü¼ÆÊ±
+ 144   4                                  if(key_time >= MuxKeyTime)                         // ×éºÏ¼ü³¤°´¼ÆÊ±
+ 145   4                                  {
+ 146   5                                    
+ 147   5                                          key_return = (K_1|K_2);                // ×éºÏ¼ü¹¦ÄÜ,"ÅäÖÃ"¼ü
+ 148   5                                          key_state = key_state_4;                   // °´ÏÂÊ±¼ä>=MuxKeyTime,×ªµ½°´¼üÊÍ·Å×´Ì¬
+ 149   5                                           
+ 150   5                                  }
+ 151   4                              }
+ 152   3                            else if (key_press == K_Back)  
+ 153   3                              {
+ 154   4                                                                                    // °´¼ü¼ÆÊ±
+ 155   4                                  if(key_time>= OneKeyTime)                         // µ¥¼ü³¤°´¼ÆÊ±
+ 156   4                                  {
+ 157   5                                     
+ 158   5                                          key_return = K_Long ;                     // ·µ»Ø³¤°´¼üµÄ¼üÖµ
+ 159   5                                          key_state = key_state_4;                  // °´ÏÂÊ±¼ä>=OneKeyTime                                         
+             -                                   
+ 160   5       
+ 161   5                                  }
+ 162   4                              }
+ 163   3                              
+ 164   3                              
+ 165   3                          else if(key_press == K_1||key_press == K_2)   
+ 166   3                              {
+ 167   4                                  
+ 168   4                                  if(key_time >= OneKeyTime2s )                     // µ¥¼ü³¤°´¼ÆÊ±
+ 169   4                                  {
+ 170   5                                          key_state = key_state_3;                  // °´ÏÂÊ±¼ä>=OneKeyTime,×ªµ½Á¬·¢¹¦ÄÜÌ¬,ÓÃÓÚ´¥·
+             -¢Á¬·¢¹¦ÄÜ
+ 171   5                                          key_time = 0;                                        // Çå°´¼ü¼ÆÊýÆ÷
+ 172   5                                          key_return = key_value_old;               // ·µ»ØÉÏÒ»´Î°´¼üÖµ
+C51 COMPILER V9.60.0.0   KEY                                                               05/11/2020 22:35:55 PAGE 4   
+
+ 173   5                                  }
+ 174   4                                 
+ 175   4                              }   
+ 176   3                          }
+ 177   2                          else
+ 178   2                          {
+ 179   3                                  key_state = key_state_4;                           // °´¼üÒÑ·¢Éú±ä»¯,×ªµ½°´¼üÊÍ·ÅÌ¬
+ 180   3       
+ 181   3                          }
+ 182   2                          break;
+ 183   2                  case key_state_3:                                                  // 4.°´¼üÁ¬·¢¹¦ÄÜ
+ 184   2                          if (key_press == key_press_old) 
+ 185   2                          {
+ 186   3                                  if (++key_time >= RepeatTime)                      // °´¼üÊ±¼ä¼ÆÊý 
+ 187   3                                  {
+ 188   4                                          key_time = 0;                              // °´ÏÂÊ±¼ä>=0.05s£¬Çå0°´¼ü¼ÆÊýÆ÷
+ 189   4                                          key_return = key_value_old;                // ·µ»ØÉÏÒ»´Î°´¼üÖµ
+ 190   4                                  }                                
+ 191   3                          }
+ 192   2                          else
+ 193   2                              key_state = key_state_4;                              // °´¼üÒÑ·¢Éú±ä»¯,×ªµ½°´¼üÊÍ·ÅÌ¬
+ 194   2                          break;
+ 195   2                  case key_state_4:                                                 // 5.µÈ´ýËùÓÐ°´¼üÊÍ·Å¿ª
+ 196   2                          //if (!key_press)                                         // µÈ´ýËùÓÐ°´¼üÊÍ·Å,²Å½øÈëÒ»´ÎÐÂµÄ°´¼ü
+             -È·ÈÏ¹ý³Ì
+ 197   2                          if (key_press != key_press_old)                           // °´¼ü·¢Éú±ä»¯,¾Í½øÈëÒ»´ÎÐÂµÄÈ·ÈÏ¹ý³Ì
+ 198   2                              key_state = key_state_0;                              // °´¼üÒÑÊÍ·Å,×ª»»µ½³õÊ¼Ì¬.
+ 199   2                          break;                        
+ 200   2              }        
+ 201   1          return key_return;
+ 202   1      }
+ 203          
+ 204          
+ 205          
+ 206          
+ 207          void  Check_Key(void)
+ 208          { 
+ 209   1      //   if(wifi_work_state ==1)
+ 210   1      //   {  
+ 211   1              switch(Read_Key())
+ 212   1              {
+ 213   2                case K_1: // 
+ 214   2                    config_rf_flag = 1;   //ÅäÍø±êÖ¾Îª1Ê±,°ÑµØÖ·ÂëÐ´Èëeeprom;
+ 215   2                
+ 216   2                    receive_rf_flag = 0;
+ 217   2                    KEY1 = key_code  ;
+ 218   2                
+ 219   2                P3_5 = !P3_5;
+ 220   2                    break;
+ 221   2                
+ 222   2                case K_2: // 
+ 223   2                    config_rf_flag = 1;   //ÅäÍø±êÖ¾Îª1Ê±,°ÑµØÖ·ÂëÐ´Èëeeprom;
+ 224   2                    receive_rf_flag = 0;
+ 225   2                    KEY2 = key_code  ;
+ 226   2                    break;
+ 227   2                
+ 228   2                case K_3: // 
+ 229   2                    config_rf_flag = 1;   //ÅäÍø±êÖ¾Îª1Ê±,°ÑµØÖ·ÂëÐ´Èëeeprom;
+ 230   2                
+ 231   2                    receive_rf_flag = 0;
+ 232   2                    KEY3 = key_code  ;
+ 233   2                    break;
+C51 COMPILER V9.60.0.0   KEY                                                               05/11/2020 22:35:55 PAGE 5   
+
+ 234   2                
+ 235   2                  
+ 236   2                
+ 237   2                case 0: //ÎÞ°´¼ü°´ÏÂ
+ 238   2                    break; 
+ 239   2                default:
+ 240   2                    
+ 241   2                   break;
+ 242   2              }
+ 243   1      //   }  
+ 244   1            
+ 245   1      }
+ 246          
+ 247          
+ 248          
+ 249          
+ 250          
+ 251          
+ 252          
+ 253          
+ 254          
+ 255          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    390    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      5       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

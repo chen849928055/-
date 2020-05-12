@@ -1,0 +1,1 @@
+"..\..\Utilities\buzzer.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\buzzer.lst) TABS (2) OBJECT(.\Output\buzzer.obj)

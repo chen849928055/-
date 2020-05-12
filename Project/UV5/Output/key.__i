@@ -1,0 +1,1 @@
+"..\..\Utilities\key.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\key.lst) TABS (2) OBJECT(.\Output\key.obj)

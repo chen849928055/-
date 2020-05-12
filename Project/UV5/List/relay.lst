@@ -1,0 +1,89 @@
+C51 COMPILER V9.60.0.0   RELAY                                                             04/22/2020 10:40:31 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE RELAY
+OBJECT MODULE PLACED IN .\Output\relay.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Utilities\relay.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Appli
+                    -cation;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\relay.lst) TABS(2) OBJECT(.\Output\relay.obj)
+
+line level    source
+
+   1          /***************************************************************************
+   2          * 独立按键的初始化及其功能函数
+   3          *
+   4          * 文 件: relay.h
+   5          * 作 者: CJW
+   6          * 说 明：继电器和LED指示灯功能函数
+   7          * 编写时间: 2016.7.20
+   8          * 版 本：1.0
+   9          * 修改日期： 无
+  10           
+  11          *---------------------------------------------------------------------------
+  12           
+  13          *****************************************************************************/
+  14           
+  15          #include "relay.h" 
+  16          /* Includes ----------------------------------------------------------------------------------------------
+             ---*/
+  17           
+  18           
+  19          // P0M0 = 0x01;                        //P00设置为模拟输入
+  20          //    P0M1 = 0x61;                        //P01设置为非施密特数字带上拉输入
+  21          //    P2M1 = 0x51;                        //P21设置为非施密特数字带下拉输入
+  22          //    P2M3 = 0x69;                        //P23设置为施密特数字带上拉输入
+  23          //    P3M4 = 0x59;                        //P34设置为施密特数字带下拉输入
+  24          //    P3M5 = 0x71;                        //P35设置为非施密特数字带上下拉输入
+  25          //    P2M5 = 0x79;                        //P25设置为施密特数字带上下拉输入
+  26          //    P2M6 = 0xC1;                        //P26设置为推挽输出
+  27          //    P2M7 = 0xC5;                        //P27设置为开漏输出
+  28          //    P1M7 = 0xE5;                        //P17设置为开漏带上拉输出 
+  29          void relay_init(void) 
+  30          {
+  31   1        
+  32   1        P1_5 =~ P1_5;
+  33   1      
+  34   1      
+  35   1      }
+  36            
+  37                
+  38           
+  39          
+  40          
+  41          
+  42          
+  43          
+  44          
+  45          
+  46          
+  47          
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+C51 COMPILER V9.60.0.0   RELAY                                                             04/22/2020 10:40:31 PAGE 2   
+
+  54          
+  55          
+  56          
+  57          
+  58          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =      3    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

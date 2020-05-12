@@ -1,0 +1,184 @@
+C51 COMPILER V9.60.0.0   EEPROM                                                            05/11/2020 22:35:55 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN .\Output\eeprom.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Utilities\eeprom.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Appl
+                    -ication;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\eeprom.lst) TABS(2) OBJECT(.\Output\eeprom.ob
+                    -j)
+
+line level    source
+
+   1          /**
+   2          *   ************************************************************************************
+   3          *               ÉÏº£Ğ¾Ê¥µç×Ó¹É·İÓĞÏŞ¹«Ë¾
+   4          *                   www.holychip.cn
+   5          * ************************************************************************************
+   6          * @Examle Version   V1.0.2.0
+   7          * @Demo Version   V1.0.2.0
+   8          * @Date       2019.7.30
+   9          * ************************************************************************************
+  10          *                  Ä£¿éĞÔÄÜ½éÉÜ
+  11          * 1¡¢Flash²ÁĞ´´ÎÊı10Íò´ÎÒÔÉÏ
+  12          * 2¡¢ÉÈÇø²Á³ıÊ±¼äÔ¼5ms£¬ÇÒ²Á³ıÊ±²»ÏìÓ¦ÈÎºÎÖĞ¶Ï£¬µ«»áÖÃÏà¹Ø±êÖ¾Î»£¬²Á³ıÍê³ÉºóÏìÓ¦
+  13          * 3¡¢¿ÉÉèÖÃÓ¦ÓÃ³ÌĞò¶Á±£»¤£¬Ó¦ÓÃ³ÌĞòĞ´±£»¤£¨ÒÔ4K×Ö½ÚÎª±£»¤µ¥Î»£©
+  14          * 4¡¢¿ÉÒÔÉèÖÃ·ÂÕæÆ÷ÉÈÇø¶Á±£»¤£¬ÉÈÇøĞ´±£»¤£¨ÒÔ4K×Ö½ÚÎª±£»¤µ¥Î»£©
+  15          * 5¡¢ÉèÖÃ±£»¤ºóÎŞ·¨²ÁĞ´³ÌĞò£¬¶ÁÈ¡µÄÊı¾İÈ«ÎªÁã
+  16          *   6¡¢Ã¿Ò»¿ÅMCUÔÚ³ö³§Ê±»á¹Ì»¯Ò»¸öCHIP_ID£¬Ò»¹²8¸ö×Ö½Ú£¬Ò»¿ÅĞ¾Æ¬Ò»¸öID£¬²»»áÖØ¸´
+  17          * ************************************************************************************
+  18          *                  Ó¦ÓÃ×¢ÒâÊÂÏî
+  19          * 1¡¢FcpuĞèÒªÅäÖÃÎª1-16MHzÖ®¼äµÄÕıÕûÊı£¬ÇÒFlash²ÁĞ´Ö®Ç°ĞèÒªÅäÖÃFREQ_CLK¼Ä´æÆ÷£¬¸Ã¼Ä´æÆ÷
+  20          *    Öµ¼´Îªµ±Ç°CPUÊ±ÖÓÆµÂÊ¡£µ±CPUÊ±ÖÓÆµÂÊµÍÓÚ1MHzÊ±£¬²»ÄÜ½øĞĞFlashµÄIAP²ÁĞ´²Ù×÷¡£
+  21          * 2¡¢ÉÈÇø²Á³ıĞ´Èë¹ı³ÌÖĞ²»ÄÜ±»´ò¶Ï
+  22          * 3¡¢Êı¾İ´æ·ÅµØÖ·ĞèÒªÔÚ³ÌĞò´æ·ÅµØÖ·Ö®ºó
+  23          *   4¡¢Flsah²Ù×÷×îµÍµçÑ¹ÏŞÖÆÎª2.0V£¬ËùÒÔ½¨Òé½øĞĞFlash²Ù×÷Ç°½øĞĞµçÑ¹¼ì²â»òÕß´ò¿ªBOR£¬BORµç
+  24          *      Ñ¹½¨ÒéÉèÖÃÎª2.4V¼°2.4VÒÔÉÏ
+  25          * 5¡¢½¨ÒéÔÚ½øĞĞFlash²ÁĞ´²Ù×÷Ç°¹Ø±ÕÖĞ¶Ï£¬²ÁĞ´Íê³ÉºóÔÙ´ò¿ªÖĞ¶Ï
+  26          * 6¡¢±ØĞëÏÈ²Á³ıºóÔÙĞ´
+  27          * ************************************************************************************
+  28          *                        ¿Í»§·şÎñ
+  29          * ¸ĞĞ»ÄúÊ¹ÓÃÎÒÃÇµÄµ¥Æ¬»ú£¬Èô·¢ÏÖ´íÎó»ò¶Ôº¯ÊıµÄÊ¹ÓÃ´æÔÚÒÉÎÊ¡£ÇëÌí¼ÓÉÏº£Ğ¾Ê¥µç×Ó¹Ù·½QQÈº
+  30          * ****************************¼¼ÊõÖ§³ÖÈº£º201030494***********************************
+  31          *   ************************************************************************************
+  32          **/
+  33          
+  34           
+  35          #include "eeprom.h"
+  36          
+  37          
+  38          
+  39          void Flash_EraseBlock(unsigned int fui_Address);//ÉÈÇø²Á³ı
+  40          void FLASH_WriteData(unsigned char fui_Address, unsigned int fuc_SaveData);//Ğ´ÈëÒ»¸öÊı¾İ
+  41          void Flash_WriteArr(unsigned int fui_Address,unsigned char fuc_Length,unsigned char *fucp_SaveArr);//Ğ´ÈëÈ
+             -ÎÒâ³¤¶ÈÊı¾İ
+  42          void Flash_ReadArr(unsigned int fui_Address,unsigned char fuc_Length,unsigned char *fucp_SaveArr);//¶ÁÈ¡ÈÎ
+             -Òâ³¤¶ÈÊı¾İ
+  43          
+  44          unsigned char guc_num = 0;
+  45          /***************************************************************************************
+  46            * @ÊµÏÖĞ§¹û Í¨¹ı´®¿Ú¹¤¾ß·¢ËÍµØÖ·0x3C00´¦1¸öÊı¾İ£¬µôµçºóÔÙÉÏµç£¬´®¿Ú·¢ËÍÉÏ¸öÊı¾İ¼Ó1£¬ÊµÏÖµôµç´æ´¢Êı¾İ
+  47            * @²Ù×÷²½Öè   ½ÓÉÏRXD TXD¶ÌÂ·Ã±£¬Í¨¹ı´®¿Ú¹¤¾ß£¬ÉÏÎ»»ú½çÃæ½ÓÊÕµ½Êı¾İ¡£
+  48          ***************************************************************************************/
+  49          void eeprom_init(void) 
+  50          {
+  51   1      
+C51 COMPILER V9.60.0.0   EEPROM                                                            05/11/2020 22:35:55 PAGE 2   
+
+  52   1      /**********************************FlashÅäÖÃ³õÊ¼»¯*************************************/
+  53   1        FREQ_CLK = 0x10;          //Ö¸Ã÷µ±Ç°ÏµÍ³Ê±ÖÓ
+  54   1      //  Flash_ReadArr(EEPROM_ADDR,1,&guc_num);  //¶ÁÈ¡µØÖ·0x3C00ËùÔÚÉÈÇø
+  55   1      //  guc_num++;                              //Êı¾İ¼Ó1
+  56   1      //  Flash_EraseBlock(EEPROM_ADDR);       //²Á³ıµØÖ·0x3C00ËùÔÚÉÈÇø
+  57   1      //  Flash_WriteArr(EEPROM_ADDR,1,&guc_num);  //ÔÚµØÖ·0x3C00Ğ´ÈëÊı¾İ
+  58   1        
+  59   1       
+  60   1      }
+  61            
+  62          /**
+  63            * @ËµÃ÷   ÉÈÇø²Á³ı£¬Ô¼ÏûºÄ5msµÄÊ±¼ä
+  64            * @²ÎÊı   fui_Address £º±»²Á³ıµÄÉÈÇøÄÚµÄÈÎÒâÒ»¸öµØÖ·
+  65            * @·µ»ØÖµ ÎŞ
+  66            * @×¢   Ö»Òª²Ù×÷ÉÈÇøÀïÃæµÄÈÎÒâÒ»¸öµØÖ·£¬¾Í¿ÉÒÔ²Á³ı´ËÉÈÇø
+  67            */
+  68          #pragma disable             //È·±£µ÷ÕûÊ±²»»á½øÖĞ¶Ïµ¼ÖÂµ÷ÕûÊ§°Ü
+  69          void Flash_EraseBlock(unsigned int fui_Address)
+  70          {
+  71   1        IAP_CMD = 0xF00F;         //Flash½âËø
+  72   1        IAP_ADDR = fui_Address;       //Ğ´Èë²Á³ıµØÖ·
+  73   1        IAP_CMD = 0xD22D;         //Ñ¡Ôñ²Ù×÷·½Ê½£¬ ÉÈÇø²Á³ı
+  74   1        IAP_CMD = 0xE11E;           //´¥·¢ºóIAP_ADDRL&IAP_ADDRHÖ¸Ïò0xFF£¬Í¬Ê±×Ô¶¯Ëø¶¨
+  75   1      }
+  76          
+  77          /**
+  78            * @ËµÃ÷   Ğ´ÈëÒ»¸ö×Ö½ÚÊı¾İµ½FlashÀïÃæ
+  79            * @²ÎÊı   fui_Address £ºFLASHµØÖ·
+  80            * @²ÎÊı fucp_SaveData£ºĞ´ÈëµÄÊı¾İ
+  81            * @·µ»ØÖµ ÎŞ
+  82            * @×¢   Ğ´Ö®Ç°±ØĞëÏÈ¶Ô²Ù×÷µÄÉÈÇø½øĞĞ²Á³ı
+  83            */
+  84          #pragma disable             //È·±£µ÷ÕûÊ±²»»á½øÖĞ¶Ïµ¼ÖÂµ÷ÕûÊ§°Ü
+  85          void FLASH_WriteData(unsigned char fuc_SaveData, unsigned int fui_Address)
+  86          {
+  87   1        IAP_DATA = fuc_SaveData;
+  88   1        IAP_CMD=0xF00F;         //Flash½âËø
+  89   1        IAP_ADDR = fui_Address;
+  90   1        IAP_CMD=0xB44B;         //×Ö½Ú±à³Ì
+  91   1        IAP_CMD=0xE11E;         //´¥·¢Ò»´Î²Ù×÷
+  92   1      }
+  93          
+  94          /**
+  95            * @ËµÃ÷   Ğ´ÈëÈÎÒâ³¤¶ÈµÄÊı¾İµ½FLASHÀïÃæ
+  96            * @²ÎÊı   fui_Address £ºFLASHÆğÊ¼µØÖ·
+  97            * @²ÎÊı fuc_Length £º Ğ´ÈëÊı¾İ³¤¶È
+  98            *     È¡Öµ·¶Î§£º0x00-0xFF
+  99            * @²ÎÊı *fucp_SaveArr£ºĞ´ÈëµÄÊı¾İ´æ·ÅÇøÓòµÄÊ×µØÖ·
+ 100            * @·µ»ØÖµ ÎŞ
+ 101            * @×¢   Ğ´Ö®Ç°±ØĞëÏÈ¶Ô²Ù×÷µÄÉÈÇø½øĞĞ²Á³ı
+ 102            */
+ 103          #pragma disable           //È·±£µ÷ÕûÊ±²»»á½øÖĞ¶Ïµ¼ÖÂµ÷ÕûÊ§°Ü
+ 104          void Flash_WriteArr(unsigned int fui_Address,unsigned char fuc_Length,unsigned char *fucp_SaveArr)
+ 105          {
+ 106   1        unsigned char fui_i = 0;
+ 107   1        for(fui_i=0;fui_i<fuc_Length;fui_i++)
+ 108   1        {
+ 109   2          FLASH_WriteData(*(fucp_SaveArr++), fui_Address++); 
+ 110   2        }
+ 111   1      }
+ 112          
+ 113          /**
+C51 COMPILER V9.60.0.0   EEPROM                                                            05/11/2020 22:35:55 PAGE 3   
+
+ 114            * @ËµÃ÷   ´ÓFLASHÀïÃæ¶ÁÈ¡ÈÎÒâ³¤¶ÈµÄÊı¾İ
+ 115            * @²ÎÊı   fui_Address £ºFLASHÆğÊ¼µØÖ·
+ 116            * @²ÎÊı fuc_Length £º¶ÁÈ¡Êı¾İ³¤¶È
+ 117            *     È¡Öµ·¶Î§£º0x00-0xFF
+ 118            * @²ÎÊı *fucp_SaveArr£º¶ÁÈ¡Êı¾İ´æ·ÅµÄÇøÓòÊ×µØÖ·
+ 119            * @·µ»ØÖµ ÎŞ
+ 120            * @×¢   ÎŞ
+ 121            */
+ 122          void Flash_ReadArr(unsigned int fui_Address,unsigned char fuc_Length,unsigned char *fucp_SaveArr)
+ 123          {
+ 124   1        while(fuc_Length--)
+ 125   1        *(fucp_SaveArr++)=*((unsigned char code *)(fui_Address++));//¶ÁÈ¡Êı¾İ
+ 126   1      }
+ 127           
+ 128                
+ 129           
+ 130          
+ 131          
+ 132          
+ 133          
+ 134          
+ 135          
+ 136          
+ 137          
+ 138          
+ 139          
+ 140          
+ 141          
+ 142          
+ 143          
+ 144          
+ 145          
+ 146          
+ 147          
+ 148          
+ 149          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    200    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1      11
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

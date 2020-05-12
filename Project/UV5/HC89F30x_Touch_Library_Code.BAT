@@ -1,0 +1,22 @@
+SET C51INC=c:\Keil_v5\C51\Inc;c:\Keil_v5\C51\Inc\Holychip
+SET C51LIB=c:\Keil_v5\C51\Lib
+SET CPU_TYPE=HC89F301
+SET CPU_VENDOR=HolyChip
+SET UV2_TARGET=HC89F30x_Touch_Library_Code
+SET CPU_XTAL=0x01E84800
+"c:\Keil_v5\C51\BIN\AX51.EXE" @".\Output\STARTUP._ia"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\Main.__i"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\key.__i"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\eeprom.__i"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\timer.__i"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\buzzer.__i"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC89F3~2.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC89F3~1.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC89F3~3.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC9522~1.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC89F3~4.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC78C6~1.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HC0995~1.__I"
+"c:\Keil_v5\C51\BIN\C51.EXE" @".\Output\HCD09F~1.__I"
+"c:\Keil_v5\C51\BIN\LX51.EXE" @".\Output\HC89F3~1.LNP"
+"c:\Keil_v5\C51\BIN\OHX51.EXE" ".\Output\HC89F30x_Touch_Library_Code" HEX

@@ -1,0 +1,98 @@
+C51 COMPILER V9.60.0.0   HC89F30X_IO_INIT                                                  05/11/2020 22:35:56 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HC89F30X_IO_INIT
+OBJECT MODULE PLACED IN .\Output\HC89F30x_IO_INIT.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\User\C\HC89F30x_IO_INIT.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\
+                    -..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG PRINT(.\List\HC89F30x_IO_INIT.lst) TABS(2) OBJECT(.
+                    -\Output\HC89F30x_IO_INIT.obj)
+
+line level    source
+
+   1          /******************* (C) COPYRIGHT 2009~2019 holychip **************************
+   2          * File Name          : HC89F30x_IO_INIT.c
+   3          ********************************************************************************
+   4          
+   5          
+   6          *******************************************************************************/
+   7          #include  "HC89F303.h"
+   8          #include  "HC89F30x_IO_INIT.h"
+   9          
+  10          /****************************************************************************
+  11          * Function Name  :
+  12          * Description    :
+  13          * Input          : None
+  14          * Output         : None
+  15          * Return         : None
+  16          ****************************************************************************/
+  17          // P0M0 = 0x01;                        //P00设置为模拟输入
+  18          //    P0M1 = 0x61;                        //P01设置为非施密特数字带上拉输入
+  19          //    P2M1 = 0x51;                        //P21设置为非施密特数字带下拉输入
+  20          //    P2M3 = 0x69;                        //P23设置为施密特数字带上拉输入
+  21          //    P3M4 = 0x59;                        //P34设置为施密特数字带下拉输入
+  22          //    P3M5 = 0x71;                        //P35设置为非施密特数字带上下拉输入
+  23          //    P2M5 = 0x79;                        //P25设置为施密特数字带上下拉输入
+  24          //    P2M6 = 0xC1;                        //P26设置为推挽输出
+  25          //    P2M7 = 0xC5;                        //P27设置为开漏输出
+  26          //    P1M7 = 0xE5;                        //P17设置为开漏带上拉输出 
+  27          void IO_Init(void)
+  28          {
+  29   1        P0 = 0X00;
+  30   1        P0M0 = GPIO_In_AN; //
+  31   1        P0M1 = GPIO_In_AN; //
+  32   1        P0M2 = GPIO_Out_PP; //   K1GPIO_Out_OD_Level2
+  33   1      //  P0M2 = GPIO_Out_ODPU;
+  34   1        P0M3 = GPIO_In_AN; //
+  35   1        P0M4 = GPIO_In_AN; //
+  36   1        P0M5 = GPIO_In_AN; //
+  37   1        P0M6 = GPIO_In_AN; //
+  38   1        P0M7 = GPIO_In_AN; //
+  39   1      
+  40   1        P1M0 = GPIO_In_AN; //
+  41   1        P1M1 = GPIO_In_AN; //
+  42   1        P1M2 = GPIO_In_AN; //
+  43   1        P1M3 = GPIO_In_AN; //
+  44   1      //  P1M3 = GPIO_Out_ODPU; //
+  45   1        
+  46   1        P1M4 = GPIO_In_AN; //
+  47   1        P1M5 = GPIO_In_AN; //
+  48   1        P1M6 = GPIO_In_AN; //
+  49   1        P1M7 = GPIO_In_AN; //
+  50   1      
+  51   1        P2 = 0X00;
+  52   1        P2M0 = GPIO_In_AN; //SW_SDA
+  53   1        P2M1 = GPIO_In_FLOATING; //   WIFI状态信号捕捉
+C51 COMPILER V9.60.0.0   HC89F30X_IO_INIT                                                  05/11/2020 22:35:56 PAGE 2   
+
+  54   1        P2M2 = GPIO_In_AN; //SW_SCK
+  55   1        P2M3 = GPIO_In_FLOATING; //   433波形捕捉
+  56   1        P2M4 = GPIO_Out_PP; // K2
+  57   1        P2M5 = GPIO_In_AN; //
+  58   1        P2M6 = GPIO_In_AN; //
+  59   1        P2M7 = GPIO_In_AN; //
+  60   1      
+  61   1        P3 = 0X00;
+  62   1        P3M4 = GPIO_Out_PP; // BUZ
+  63   1        P3M5 = GPIO_Out_PP; // K3
+  64   1      }
+  65          
+  66          /*********************************END OF FILE************************************/
+  67          /******************* (C) COPYRIGHT 2009~2019 holychip ***************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    132    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

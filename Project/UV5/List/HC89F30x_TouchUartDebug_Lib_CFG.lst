@@ -1,0 +1,119 @@
+C51 COMPILER V9.60.0.0   HC89F30X_TOUCHUARTDEBUG_LIB_CFG                                   05/11/2020 22:35:56 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HC89F30X_TOUCHUARTDEBUG_LIB_CFG
+OBJECT MODULE PLACED IN .\Output\HC89F30x_TouchUartDebug_Lib_CFG.obj
+COMPILER INVOKED BY: c:\Keil_v5\C51\BIN\C51.EXE ..\..\Libraries\HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebu
+                    -g_Lib_CFG.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\Application;..\..\User\INC;..\..\Libraries;..\..\Utilities) DEBUG
+                    - PRINT(.\List\HC89F30x_TouchUartDebug_Lib_CFG.lst) TABS(2) OBJECT(.\Output\HC89F30x_TouchUartDebug_Lib_CFG.obj)
+
+line level    source
+
+   1          /******************* (C) COPYRIGHT 2009~2019 holychip **************************
+   2          * File Name          : HC89F30x_TouchUartDebug_Lib_CFG.c
+   3          * Author             : Touch Team
+   4          * Version            : V1.0.5.0
+   5          * Date               : 2019/10/01
+   6          ********************************************************************************
+   7          
+   8          注：本文件不建议用户自行修改！
+   9          
+  10          *******************************************************************************/
+  11          
+  12          //===================================================================================================
+  13          #include "HC89F303.h"
+  14          #include "HC89F30x_SYS.h"
+  15          #include "HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebug_Lib_CFG.h"
+  16          
+  17          #if TouchUartDebugLib_SW
+  18          #pragma message "触摸串口调试功能：已开启，请调试结束后关闭"
+*** MESSAGE C286 IN LINE 18 OF ..\..\Libraries\HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebug_Lib_CFG.c: 触摸
+             -串口调试功能：已开启，请调试结束后关闭
+  19          #pragma message "触摸串口使用UART1相关资源，波特率由T4产生，若串口调试占用的资源与用户其它功能有冲突，请注
+             -意做相关必要的调整"
+*** MESSAGE C286 IN LINE 19 OF ..\..\Libraries\HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebug_Lib_CFG.c: 触摸
+             -串口使用UART1相关资源，波特率由T4产生，若串口调试占用的资源与用户其它功能有冲突，请注意做相关必要的调整
+  20          #include "HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebug_Lib_Build_Message.h"
+*** MESSAGE C286 IN LINE 122 OF ..\..\Libraries\HC89F30x_TouchUartDebug_Lib_V1.00\HC89F30x_TouchUartDebug_Lib_Build_Mess
+             -age.h: Touch_TXD_PIN is P2_0
+  21          #else
+              #pragma message "触摸串口调试功能：未开启"
+              #endif
+  24          
+  25          #if TouchUartDebugLib_SW
+  26          //===================================================================================================
+  27          void CTK_Debug_Mode_Uart_SendChar(u8 send_data);
+  28          void CTK_Debug_Mode_Uart_SendWord(u16 send_data);
+  29          
+  30          //===================================================================================================
+  31          void CTK_TouchUartDebug_Init()
+  32          {
+  33   1      #ifndef   SET_Touch_TXD_PORT_MODE
+              #define   SET_Touch_TXD_PORT_MODE
+              #error    "触摸调试管脚设置错误，请在HC89F30x_TouchUartDebug_Lib_CFG.h文件中重新配置TouchUartDebugLib_TXD_Px
+             -_y"
+              #endif
+  37   1      
+  38   1      #ifndef   Touch_TXD_MAP
+              #define   Touch_TXD_MAP  0x37
+              #endif
+  41   1      
+  42   1        SET_Touch_TXD_PORT_MODE;
+  43   1        TXD_MAP = Touch_TXD_MAP;
+  44   1      
+  45   1        //T4
+C51 COMPILER V9.60.0.0   HC89F30X_TOUCHUARTDEBUG_LIB_CFG                                   05/11/2020 22:35:56 PAGE 2   
+
+  46   1        SCON2 = 0x02;   // uart mode 1
+  47   1        T4 = 65536.5 - (SYSCLK_FOSC / 16 / TouchUartDebugLib_BAUDRATE); //
+  48   1        T4CON = 0x06; //UART1 BaudRate fosc
+  49   1      }
+  50          
+  51          //===================================================================================================
+  52          void CTK_Debug_Mode_Uart_SendChar(u8 send_data)
+  53          {
+  54   1        SBUF = send_data;
+  55   1      
+  56   1        while(!TI);
+  57   1      
+  58   1        TI = 0;
+  59   1      }
+  60          
+  61          //===================================================================================================
+  62          void CTK_Debug_Mode_Uart_SendWord(u16 send_data)
+  63          {
+  64   1        SBUF = (u8)(send_data >> 8);
+  65   1      
+  66   1        while(!TI);
+  67   1      
+  68   1        TI = 0;
+  69   1      
+  70   1        SBUF = (u8)send_data;
+  71   1      
+  72   1        while(!TI);
+  73   1      
+  74   1        TI = 0;
+  75   1      }
+  76          
+  77          #endif
+  78          
+  79          /*********************************END OF FILE************************************/
+  80          /******************* (C) COPYRIGHT 2009~2019 holychip ***************************/
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     54    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
